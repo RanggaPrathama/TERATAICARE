@@ -33,13 +33,14 @@ class HomeController extends Controller
 
     public function homeAdmin(){
 
-        $dokters = DB::table('dokters')->where('id_user',auth()->user()->id_user)->first();
+        $dokters = DB::table('users')->where('id_user',auth()->user()->id_user)->first();
         $bookings = DB::table('bookings')
                     ->join('users','users.id_user','=','bookings.id_user')
                     ->join('dokters','dokters.id_dokter','=','bookings.id_dokter')
                     ->join('bidang_dokters','bidang_dokters.id_bidang','=','dokters.id_bidang')
-                    ->where('bookings.id_dokter','=', $dokters->id_dokter)->orderByDesc('bookings.id_booking')->get();
+                   ->orderByDesc('bookings.id_booking')->where('bookings.id_user','=',$dokters->id_user)->get();
 
         return view('admin.homeAdmin',['bookings' => $bookings]);
+
     }
 }
